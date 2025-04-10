@@ -1,4 +1,4 @@
-# SQL Operations & Database Management Lab 2
+# SQL Operations & Database Management 
 
 This repository contains SQL queries for the Banking System database as part of the SQL Operations & Database Management 2 lab assignment.
 

@@ -1,10 +1,5 @@
-
-import mysql.connector
-from mysql.connector import Error
-
-def test_connection():
+def run_lab_queries():
     try:
-        
         connection = mysql.connector.connect(
             host='localhost',
             user='nezam', 
@@ -13,24 +8,26 @@ def test_connection():
         )
         
         if connection.is_connected():
-            db_info = connection.get_server_info()
-            print(f"Connected to MySQL Server version {db_info}")
-            
-           
             cursor = connection.cursor()
             
-          
-            cursor.execute("SELECT COUNT(*) FROM customers")
-            result = cursor.fetchone()
-            print(f"Total customers in database: {result[0]}")
+            # Read the SQL file
+            with open('lab2_queries.sql', 'r') as file:
+                sql_commands = file.read().split(';')
+                
+            # Execute each query
+            for command in sql_commands:
+                if command.strip():
+                    print(f"Executing: {command[:50]}...")
+                    cursor.execute(command)
+                    if cursor.with_rows:
+                        result = cursor.fetchall()
+                        print(f"Results: {len(result)} rows")
             
-           
-            cursor.execute("SELECT COUNT(*) FROM accounts")
-            result = cursor.fetchone()
-            print(f"Total accounts in database: {result[0]}")
+            connection.commit()
+            print("All queries executed successfully")
             
     except Error as e:
-        print(f"Error connecting to MySQL: {e}")
+        print(f"Error: {e}")
     finally:
         if 'connection' in locals() and connection.is_connected():
             cursor.close()
@@ -38,5 +35,4 @@ def test_connection():
             print("MySQL connection is closed")
 
 if __name__ == "__main__":
-    print("Testing connection to Banking System database...")
-    test_connection()
+    run_lab_queries()
